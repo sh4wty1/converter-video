@@ -33,7 +33,7 @@ build/
 .vscode/
 
 ### Storage local (vídeos) ###
-storage/
+/storage/
 *.mp4
 *.mov
 *.mkv

@@ -7,10 +7,14 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.*;
+import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 @Component
 public class LocalStorage implements StorageInterface {
+
+    private static final Set<String> EXTENSOES_PERMITIDAS = Set.of(".mp4", ".mov", ".mkv", ".avi", ".webm");
 
     private final Path diretorioBase = Paths.get("storage/uploads").toAbsolutePath().normalize();
 
@@ -34,12 +38,7 @@ public class LocalStorage implements StorageInterface {
             throw new IllegalArgumentException("O jobId não pode ser nulo");
         }
 
-        String nomeOriginal = video.getOriginalFilename();
-        String extensao = ".mp4";
-
-        if (nomeOriginal != null && nomeOriginal.contains(".")) {
-            extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
-        }
+        String extensao = extrairExtensao(video.getOriginalFilename());
 
         String nomeVideo = jobId.toString() + extensao;
 
@@ -50,6 +49,20 @@ public class LocalStorage implements StorageInterface {
         }
 
         return caminhoCompleto.toString();
+    }
+
+    private String extrairExtensao(String nomeOriginal) {
+        if (nomeOriginal == null || !nomeOriginal.contains(".")) {
+            throw new IllegalArgumentException("O arquivo precisa ter uma extensão");
+        }
+
+        String extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf(".")).toLowerCase(Locale.ROOT);
+
+        if (!EXTENSOES_PERMITIDAS.contains(extensao)) {
+            throw new IllegalArgumentException("Extensão de arquivo não permitida: " + extensao);
+        }
+
+        return extensao;
     }
 
     @Override

@@ -29,6 +29,7 @@ public class LocalStorage implements StorageInterface {
 
     @Override
     public String salvar(MultipartFile video, UUID jobId) throws IOException {
+        
         // Valida se o video existe ou está vazio
         if (video == null || video.isEmpty()) {
             throw new IllegalArgumentException("O vídeo não pode ser nulo");

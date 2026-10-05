@@ -9,7 +9,7 @@ O vídeo em si é só o pretexto. O que eu quero aprender aqui é como lidar com
 Converter vídeo leva minutos. Se a API fizer isso dentro da requisição, dá timeout, trava threads e perde o trabalho se a conexão cair. Então:
 
 1. O cliente envia o vídeo (`POST /jobs`)
-2. A API guarda o arquivo, cria um job com status `WAITING` e responde na hora com `202` e um `jobId`
+2. A API guarda o arquivo, cria um job com status `PENDENTE` e responde na hora com `202` e um `jobId`
 3. Um worker separado pega o job, converte com FFmpeg e marca como pronto
 4. O cliente consulta `GET /jobs/{id}` até terminar e baixa o resultado
 
@@ -40,4 +40,6 @@ docker compose up -d
 
 ## Status
 
-Em construção. Por enquanto só o começo do `POST /jobs` (modelo de dados e criação do job). Storage, conversão, worker e o resto do roteiro ainda vêm.
+Em construção. O `POST /jobs` já recebe o vídeo (`multipart/form-data`, campo `video`), salva em `storage/uploads` e cria o job como `PENDENTE`. Ainda responde `200` com o UUID puro; falta o `202` com DTO, o tratamento de erros, o `GET /jobs/{id}`, a conversão e o worker.
+
+O que ficou pra depois está no [PENDENCIAS.md](PENDENCIAS.md).

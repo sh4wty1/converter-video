@@ -35,7 +35,7 @@ public class JobEntity {
 
     public JobEntity(UUID id, String caminhoEntrada) {
         this.id = id;
-        this.status = JobStatusEnum.WAITING;
+        this.status = JobStatusEnum.PENDENTE;
         this.caminhoEntrada = caminhoEntrada;
         this.criadoEm = Instant.now();
         this.tentativas = 0;
